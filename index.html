@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Weather Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1f4068, #162447, #0f1a1c);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Card Identitas */
+        .identitas-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .identitas-card p {
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #cbd5e1;
+        }
+
+        .identitas-card strong {
+            color: #00fff0;
+            font-weight: 600;
+        }
+
+        /* Utama Weather Card */
+        .weather-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Bagian Atas / Header Card */
+        .weather-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .weather-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .weather-header p {
+            font-size: 14px;
+            color: #00fff0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Display Suhu Utama */
+        .temp-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .temp-box {
+            text-align: center;
+        }
+
+        .temp-box .value {
+            font-size: 36px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .temp-box .unit {
+            font-size: 12px;
+            color: #a0aec0;
+            text-transform: uppercase;
+        }
+
+        /* Grid Data Detail */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 4px solid #00fff0;
+        }
+
+        /* Khusus Humidity mengambil rentang penuh bawah */
+        .info-item.full-width {
+            grid-column: span 2;
+            border-left: 4px solid #ff007f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="identitas-card">
+        <p>Developer: <strong>BIMA EKO NUGROHO</strong> | NIM: <strong>20240140141</strong></p>
+    </div>
+
+    <div class="weather-card">
+        <div class="weather-header">
+            <h2 id="lokasi-name">Memuat...</h2>
+            <p id="lokasi-region">Region</p>
+        </div>
+
+        <div class="temp-display">
+            <div class="temp-box">
+                <div class="value" id="cuaca-temp_c">-</div>
+                <div class="unit">Celcius</div>
+            </div>
+            <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.2);"></div>
+            <div class="temp-box">
+                <div class="value" id="cuaca-temp_f">-</div>
+                <div class="unit">Fahrenheit</div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Country</div>
+                <div class="info-value" id="lokasi-country">-</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Latitude</div>
+                <div class="info-value" id="lokasi-lat">-</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Longitude</div>
+                <div class="info-value" id="lokasi-lon">-</div>
+            </div>
+
+            <div class="info-item" style="border-left: 4px solid #ffaa00;">
+                <div class="info-label">Status</div>
+                <div class="info-value" style="color: #ffaa00;">Active</div>
+            </div>
+
+            <div class="info-item full-width">
+                <div>
+                    <div class="info-label">Humidity</div>
+                    <div class="info-value" id="cuaca-humidity" style="font-size: 20px;">-</div>
+                </div>
+                <span style="font-size: 24px;">💧</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        const input = "yogyakarta"; 
+        const urlapi = "https://api.weatherapi.com/v1/forecast.json?key=3fd16d04e4b64701a5831349260807&q=" + input + "&days=1&aqi=no&alerts=no";
+
+        $.ajax({
+            url: urlapi,
+            method: "GET",
+            success: function(data){
+                // Memasukkan data lokasi
+                document.getElementById("lokasi-name").innerHTML = data.location.name;
+                document.getElementById("lokasi-region").innerHTML = data.location.region;
+                document.getElementById("lokasi-country").innerHTML = data.location.country;
+                document.getElementById("lokasi-lon").innerHTML = data.location.lon;
+                document.getElementById("lokasi-lat").innerHTML = data.location.lat;
+
+                // Memasukkan data cuaca
+                document.getElementById("cuaca-temp_c").innerHTML = data.current.temp_c + "°C";
+                document.getElementById("cuaca-temp_f").innerHTML = data.current.temp_f + "°F";
+                document.getElementById("cuaca-humidity").innerHTML = data.current.humidity + "%";
+            },
+            error: function(error){
+                console.log("Gagal memuat data: ", error);
+                document.getElementById("lokasi-name").innerHTML = "Error!";
+            }
+        });
+    </script>
+
+</body>
+</html>
